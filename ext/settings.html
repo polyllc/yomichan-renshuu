@@ -1328,6 +1328,47 @@
         </div></div>
     </div>
 
+
+    <!-- Renshuu -->
+    <div class="heading-container">
+        <div class="heading-container-icon"><span class="icon" data-icon="renshuu"></span></div>
+        <div class="heading-container-left"><h2 id="renshuu"><a href="#!renshuu">Renshuu</a></h2></div>
+    </div>
+    <div class="settings-group">
+        <div class="settings-item"><div class="settings-item-inner">
+            <div class="settings-item-left">
+                <div class="settings-item-label">Enable Renshuu integration</div>
+                <div class="settings-item-description">Allow to connect to Renshuu in order to add terms from yomichan to Renshuu</div>
+            </div>
+            <div class="settings-item-right">
+                <label class="toggle"><input type="checkbox" data-setting="renshuu.enabled"><span class="toggle-body"><span class="toggle-track"></span><span class="toggle-knob"></span></span></label>
+            </div>
+        </div></div>
+
+        <div class="settings-item">
+            <div class="settings-item-inner settings-item-inner-wrappable">
+                <div class="settings-item-left">
+                    <div class="settings-item-label">Renshuu API Key</div>
+                    <div class="settings-item-description">
+                        Change your Renshuu API key
+                        <a tabindex="0" class="more-toggle more-only" data-parent-distance="4">More&hellip;</a>
+                    </div>
+                </div>
+                <div class="settings-item-right">
+                    <input type="text" spellcheck="false" autocomplete="off" data-setting="renshuu.key">
+                </div>
+            </div>
+            <div class="settings-item-children more" hidden>
+                <p>
+                    Put your Renshuu API key here, this allows yomichan to connect to your Renshuu account and start adding words to your schedules.
+                    You can access it by going to Renshuu -> Resources (教材) -> renshuu API -> Your API key. Do not share this key. Reset it if you feel like you accidentally put it out somewhere.
+                </p>
+                <p>
+                    <a tabindex="0" class="more-toggle" data-parent-distance="3">Less&hellip;</a>
+                </p>
+            </div>
+        </div>
+    </div>
     <!-- Text Parsing -->
     <div>
         <div class="heading-container">
