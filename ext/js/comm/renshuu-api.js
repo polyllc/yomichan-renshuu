@@ -35,7 +35,7 @@ class RenshuuAPIConnection {
      * Sets the enabled state of the API connection
      * @param {boolean} value
      */
-    set enabled(value) {
+    enabled(value) {
         this._enabled = value;
     }
 
@@ -94,12 +94,18 @@ class RenshuuAPIConnection {
     }
 
     // searches a word on renshuu
-    // need to use this first before using delete and 
+    // need to use this first before using delete and add
+    // where word is the string of the word
+    async searchWord(word) {
+        if (!this._enabled) { return null; }
+        return await this._apiCall(`word/search?value=${word}`, "GET");
+    }
     
     // remove a word from a schedule 
+    // where word is the word id
     async deleteWord(word, schedule) {
         if (!this._enabled) { return null; }
-        return await this._apiCall(`word/`)
+        return await this._apiCall(`word/${word}`, "DELETE");
     }
 
     /**

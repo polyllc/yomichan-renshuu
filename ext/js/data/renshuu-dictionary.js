@@ -20,13 +20,33 @@
 class RenshuuDictionary {
     constructor() {
         this._vocabDictionary = new Map();
-        this._kanjiDictionary = new Map();
+        this._kanaToVocabDictionary = new Map();
     }
 
     importWords(wordsArray) {
-        foreach(word in wordsArray) {
-            this._kanjiDictionary.set(word.kanji_full, word.id); 
-            this._kanjiDictionary.set(word.hiragana, word.id); 
+        for (word of wordsArray) {
+            
+            setWord(word);
         }
     } 
+
+    getWord(word) {
+        return this._vocabDictionary.get(this._kanaToVocabDictionary.get(word));
+    }
+
+    setWord(word) { 
+        // we can do this because renshuu still associates kanji words with their hiragana counterpart
+        // since kanji is far more unique than hiragana or katakana representations, we prefer kanji readings
+        // we fall back to the hiragana or katakana reading (although most of the time, katakana won't have kanji)
+        // we do this awkward setting to both maps in order to simplify our getWord method
+        if(word.kanji_full != "") {
+            this._vocabDictionary.set(word.kanji_full, word.id); 
+            this._kanaToVocabDictionary.set(word.kanji_full, word.kanji_full);
+            this._kanaToVocabDictionary.set(word.hiragana_full, word.kanji_full);
+        }
+        else {
+            this._vocabDictionary.set(word.hiragana_full, word.id); 
+            this._kanaToVocabDictionary.set(word.hiragana_full, word.hiragana_full);
+        }
+    }
 }

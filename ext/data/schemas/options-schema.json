@@ -69,6 +69,7 @@
                             "translation",
                             "dictionaries",
                             "parsing",
+                            "renshuu",
                             "anki",
                             "sentenceParsing",
                             "inputs",
@@ -864,6 +865,24 @@
                                         "type": "string",
                                         "enum": ["hiragana", "katakana", "romaji", "dictionary-reading", "none"],
                                         "default": "hiragana"
+                                    }
+                                }
+                            },
+                            "renshuu" : {
+                                "type": "object",
+                                "required": [
+                                    "enabled",
+                                    "apiKey",
+                                    "schedule"
+                                ],
+                                "properties": {
+                                    "enabled": {
+                                        "type": "boolean",
+                                        "default": false
+                                    },
+                                    "apiKey": {
+                                        "type": "string",
+                                        "default": ""
                                     }
                                 }
                             },

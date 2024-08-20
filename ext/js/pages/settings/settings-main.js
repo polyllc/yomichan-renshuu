@@ -36,6 +36,7 @@
  * PopupPreviewController
  * PopupWindowController
  * ProfileController
+ * RenshuuController
  * ScanInputsController
  * ScanInputsSimpleController
  * SecondarySearchDictionaryController
@@ -108,6 +109,9 @@ async function setupGenericSettingsController(genericSettingController) {
 
         const settingsBackup = new BackupController(settingsController, modalController);
         settingsBackup.prepare();
+
+        const renshuuController = new RenshuuController(settingsController);
+        renshuuController.prepare();
 
         const ankiController = new AnkiController(settingsController);
         ankiController.prepare();

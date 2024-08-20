@@ -336,6 +336,12 @@ class OptionsUtil {
                 kanji: {deck: '', model: '', fields: {}},
                 duplicateScope: 'collection',
                 fieldTemplates: null
+            }, 
+
+            renshuu: {
+                enabled: false, 
+                apiKey: null,
+                scheduleID: null
             }
         };
     }

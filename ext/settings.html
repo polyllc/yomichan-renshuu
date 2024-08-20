@@ -1341,7 +1341,7 @@
                 <div class="settings-item-description">Allow to connect to Renshuu in order to add terms from yomichan to Renshuu</div>
             </div>
             <div class="settings-item-right">
-                <label class="toggle"><input type="checkbox" data-setting="renshuu.enabled"><span class="toggle-body"><span class="toggle-track"></span><span class="toggle-knob"></span></span></label>
+                <label class="toggle"><input type="checkbox" data-setting="renshuu.enable"><span class="toggle-body"><span class="toggle-track"></span><span class="toggle-knob"></span></span></label>
             </div>
         </div></div>
 
@@ -1369,6 +1369,7 @@
             </div>
         </div>
     </div>
+
     <!-- Text Parsing -->
     <div>
         <div class="heading-container">
@@ -3851,11 +3852,13 @@
 <script src="/js/yomichan.js"></script>
 
 <script src="/js/comm/anki-connect.js"></script>
+<script src="/js/comm/renshuu-api.js"></script>
 <script src="/js/comm/api.js"></script>
 <script src="/js/comm/cross-frame-api.js"></script>
 <script src="/js/data/anki-note-builder.js"></script>
 <script src="/js/data/anki-util.js"></script>
 <script src="/js/data/database.js"></script>
+<script src="/js/data/renshuu-dictionary.js"></script>
 <script src="/js/data/json-schema.js"></script>
 <script src="/js/data/options-util.js"></script>
 <script src="/js/data/permissions-util.js"></script>
@@ -3880,6 +3883,7 @@
 <script src="/js/media/text-to-speech-audio.js"></script>
 <script src="/js/pages/common/extension-content-controller.js"></script>
 <script src="/js/pages/settings/anki-controller.js"></script>
+<script src="/js/pages/settings/renshuu-controller.js"></script>
 <script src="/js/pages/settings/anki-templates-controller.js"></script>
 <script src="/js/pages/settings/audio-controller.js"></script>
 <script src="/js/pages/settings/backup-controller.js"></script>
