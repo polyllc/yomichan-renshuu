@@ -31,6 +31,7 @@
             <a href="#!popup-size"       class="button outline-item"><span class="outline-item-left"><span class="outline-item-icon icon" data-icon="popup-size"></span></span><span class="outline-item-label">Position &amp; Size</span></a>
             <a href="#!window"           class="button outline-item advanced-only"><span class="outline-item-left"><span class="outline-item-icon icon" data-icon="window"></span></span><span class="outline-item-label">Window</span></a>
             <a href="#!audio"            class="button outline-item"><span class="outline-item-left"><span class="outline-item-icon icon" data-icon="speaker"></span></span><span class="outline-item-label">Audio</span></a>
+            <a href="#!renshuu"            class="button outline-item"><span class="outline-item-left"><span class="outline-item-icon icon" data-icon="renshuu"></span></span><span class="outline-item-label">Renshuu</span></a>
             <a href="#!text-parsing"     class="button outline-item"><span class="outline-item-left"><span class="outline-item-icon icon" data-icon="text-parsing"></span></span><span class="outline-item-label">Text Parsing</span></a>
             <a href="#!translation"      class="button outline-item advanced-only"><span class="outline-item-left"><span class="outline-item-icon icon" data-icon="translation"></span></span><span class="outline-item-label">Translation</span></a>
             <a href="#!anki"             class="button outline-item"><span class="outline-item-left"><span class="outline-item-icon icon" data-icon="note-card"></span></span><span class="outline-item-label">Anki</span></a>
@@ -1338,7 +1339,10 @@
         <div class="settings-item"><div class="settings-item-inner">
             <div class="settings-item-left">
                 <div class="settings-item-label">Enable Renshuu integration</div>
-                <div class="settings-item-description">Allow to connect to Renshuu in order to add terms from yomichan to Renshuu</div>
+                <div class="settings-item-description">Allow to connect to Renshuu in order to add terms from yomichan to Renshuu.
+                    <span id="renshuu-error-message">Not connected</span> 
+                </div>
+                
             </div>
             <div class="settings-item-right">
                 <label class="toggle"><input type="checkbox" data-setting="renshuu.enable"><span class="toggle-body"><span class="toggle-track"></span><span class="toggle-knob"></span></span></label>
@@ -1367,6 +1371,28 @@
                     <a tabindex="0" class="more-toggle" data-parent-distance="3">Less&hellip;</a>
                 </p>
             </div>
+            <div class="settings-item" ><div class="settings-item-inner settings-item-inner-wrappable">
+                <div class="settings-item-left">
+                    <div class="settings-item-label">Term Schedule</div>
+                    <div class="settings-item-description">Select which schedule to put terms in.</div>
+                </div>
+                <div class="settings-item-right">
+                    <select lang="ja" id="renshuu-schedule-term-setting">
+                        <option value="none">None</option>
+                    </select>
+                </div>
+            </div></div>
+            <div class="settings-item" ><div class="settings-item-inner settings-item-inner-wrappable">
+                <div class="settings-item-left">
+                    <div class="settings-item-label">Kanji Schedule</div>
+                    <div class="settings-item-description">Select which schedule to put kanjis in.</div>
+                </div>
+                <div class="settings-item-right">
+                    <select lang="ja" id="renshuu-schedule-kanji-setting">
+                        <option value="none">None</option>
+                    </select>
+                </div>
+            </div></div>
         </div>
     </div>
 

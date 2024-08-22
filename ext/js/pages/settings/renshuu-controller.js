@@ -20,6 +20,12 @@ class RenshuuController {
         this._settingsController = settingsController;
         this._renshuuAPIConnection = new RenshuuAPIConnection();
         this._renshuuDictionary = new RenshuuDictionary();
+        this._renshuuErrorMessage = null;
+        this._renshuuScheduleTermList = null;
+        this._renshuuScheduleKanjiList = null;
+
+        this._renshuuKanjiID = 0;
+        this._renshuuTermID = 0;
     }
 
     get settingsController() {
@@ -28,9 +34,15 @@ class RenshuuController {
 
     async prepare() {
         this._renshuuEnableCheckbox = document.querySelector(`[data-setting="renshuu.enable"]`);
+        this._renshuuErrorMessage = document.querySelector(`#renshuu-error-message`);
+        this._renshuuScheduleTermList = document.querySelector("#renshuu-schedule-term-setting");
+        this._renshuuScheduleKanjiList = document.querySelector("#renshuu-schedule-kanji-setting");
         let renshuuAPIInput = document.querySelector(`[data-setting="renshuu.key"]`);
 
         if (this._renshuuEnableCheckbox !== null) { this._renshuuEnableCheckbox.addEventListener("settingChanged", this._onRenshuuEnableChanged.bind(this), false); }
+        if (renshuuAPIInput !== null) { renshuuAPIInput.addEventListener("settingChanged", this._onRenshuuAPIKeyChanged.bind(this), false); }
+        this._renshuuScheduleTermList.addEventListener("change", this._onTermScheduleChanged.bind(this), false);
+        this._renshuuScheduleKanjiList.addEventListener("change", this._onKanjiScheduleChanged.bind(this), false);
 
         const onRenshuuSettingChanged = () => { this._updateOptions(); };
         const nodes = [renshuuAPIInput, ...document.querySelectorAll('[data-setting="renshuu.enable"]')];
@@ -41,10 +53,90 @@ class RenshuuController {
         this._settingsController.on('optionsChanged', this._onOptionsChanged.bind(this));
     }
 
-    _onRenshuuEnableChanged({detail: {value}}) {
-        //if (this._renshuuAPIConnection._apiKey === null) { return; } // notify user to set api key
+    async _onRenshuuEnableChanged({detail: {value}}) {
+        if (this._renshuuAPIConnection.apiKey === null || this._renshuuAPIConnection.apiKey == "") { console.log("none: " + this._renshuuAPIConnection.apiKey); return; } // notify user to set api key
         this._renshuuAPIConnection.enabled = value;
-        console.log("toggle enable");
+        console.log("toggle enable: " + value);
+        if (value) {
+            this._renshuuErrorMessage.textContent = await this._testAPIConnection.bind(this)();
+            try {
+                await this._renshuuUpdateSchedules();
+            }
+            catch(e) {
+
+            }
+        }
+        else {
+            this._renshuuErrorMessage.textContent = "Not enabled";
+            this._clearScheduleList();
+        }
+        console.log("toggle enable: " + value);
+    }
+
+    async _onTermScheduleChanged() {
+        if (!this._renshuuAPIConnection.enabled) { return; }
+        const {value} = this._renshuuScheduleTermList;
+        this._renshuuTermID = value;
+        console.log(value);
+
+    }
+
+    async _onKanjiScheduleChanged() {
+        if (!this._renshuuAPIConnection.enabled) { return; }
+        const {value} = this._renshuuScheduleKanjiList;
+        this._renshuuKanjiID = value;
+        console.log(value);
+        
+    }
+
+    _clearScheduleList() {
+        let children = this._renshuuScheduleTermList.children;
+        for (let i = 0; i < children.length; i++) {
+            children[0].remove();
+        }
+
+        children = this._renshuuScheduleKanjiList.children;
+        for (let i = 0; i < children.length; i++) {
+            children[0].remove();
+        }
+    }
+
+    async _renshuuUpdateSchedules() {
+        let schedules = await this._renshuuAPIConnection.getSchedules();
+        for (const schedule of schedules) {
+            let node = document.createElement("option");
+            node.value = schedule.id;
+            node.textContent = schedule.name;
+            this._renshuuScheduleTermList.appendChild(node);
+        }
+        for (const schedule of schedules) {
+            let node = document.createElement("option");
+            node.value = schedule.id;
+            node.textContent = schedule.name;
+            this._renshuuScheduleKanjiList.appendChild(node);
+        }
+    }
+
+    _onRenshuuAPIKeyChanged({detail: {value}}) {
+        this._renshuuAPIConnection.apiKey = value;
+        console.log("added api key: " + value);
+    }
+
+    async _testAPIConnection() {
+        if (this._renshuuAPIConnection.enabled && this._renshuuAPIConnection.apiKey !== undefined && this._renshuuAPIConnection.apiKey != "") {
+            try {
+                let res = await this._renshuuAPIConnection.getProfile();
+                let text = await res.text().then((text) => {
+                    let json = JSON.parse(text);
+                    return json.real_name;
+                });
+                return "Logged in as " + text;
+            }
+            catch(e) {
+                return e;
+            }
+        }
+        return "Not enabled";
     }
 
     async _updateOptions() {
@@ -52,11 +144,11 @@ class RenshuuController {
         this._onOptionsChanged({options});
     }
 
-    _onOptionsChanged({options: {renshuu}}) {
-        let {apiKey} = renshuu;
-        if (apiKey === '') { apiKey = null; }
-        this._renshuuAPIConnection.apiKey = renshuu.apiKey;
-        this._renshuuAPIConnection.enabled = renshuu.enabled;
+    async _onOptionsChanged({options: {renshuu}}) {
+        await this._settingsController.setProfileSetting('renshuu.enabled', this._renshuuAPIConnection.enabled);
+        await this._settingsController.setProfileSetting('renshuu.apiKey', this._renshuuAPIConnection.apiKey);
+        await this._settingsController.setProfileSetting('renshuu.scheduleTerm', this._renshuuTermID);
+        await this._settingsController.setProfileSetting('renshuu.scheduleKanji', this._renshuuKanjiID);
     }
 
 }

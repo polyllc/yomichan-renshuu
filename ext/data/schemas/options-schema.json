@@ -873,7 +873,8 @@
                                 "required": [
                                     "enabled",
                                     "apiKey",
-                                    "schedule"
+                                    "scheduleTerm",
+                                    "scheduleKanji"
                                 ],
                                 "properties": {
                                     "enabled": {
@@ -882,6 +883,14 @@
                                     },
                                     "apiKey": {
                                         "type": "string",
+                                        "default": ""
+                                    },
+                                    "scheduleTerm": {
+                                        "type": "integer",
+                                        "default": ""
+                                    },
+                                    "scheduleKanji": {
+                                        "type": "integer",
                                         "default": ""
                                     }
                                 }

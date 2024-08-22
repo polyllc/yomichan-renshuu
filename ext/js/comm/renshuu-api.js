@@ -69,27 +69,32 @@ class RenshuuAPIConnection {
         }
     }
 
+
     // gets the user profile
     async getProfile() {
-        if (!this._enabled) { return null; }
         return await this._apiCall("profile", "GET");
+    }
+
+    // gets the list of schedules
+    async getSchedules() {
+        let res = await this._apiCall("schedule", "GET");
+        return await res.text().then((text) => {
+            return JSON.parse(text).schedules;
+        });
     }
 
     // gets a kanji by search 
     async getKanji(kanji) {
-        if (!this._enabled) { return null; }
         return await this._apiCall("kanji/search?value=" + kanji, "GET");
     }
 
     // remove a kanji from a schedule 
     async deleteKanji(kanji, schedule) {
-        if (!this._enabled) { return null; }
         return await this._apiCall(`kanji/${kanji}?sched_id=${schedule}`, "DELETE");
     }
 
     // add a kanji to a schedule
     async addKanji(kanji, schedule) {
-        if (!this._enabled) { return null; }
         return await this._apiCall(`kanji/${kanji}?sched_id=${schedule}`, "PUT");
     }
 
@@ -97,14 +102,12 @@ class RenshuuAPIConnection {
     // need to use this first before using delete and add
     // where word is the string of the word
     async searchWord(word) {
-        if (!this._enabled) { return null; }
         return await this._apiCall(`word/search?value=${word}`, "GET");
     }
     
     // remove a word from a schedule 
     // where word is the word id
     async deleteWord(word, schedule) {
-        if (!this._enabled) { return null; }
         return await this._apiCall(`word/${word}`, "DELETE");
     }
 
@@ -138,6 +141,7 @@ class RenshuuAPIConnection {
             throw error;
         }
 
+        return response;
     }
 
 
