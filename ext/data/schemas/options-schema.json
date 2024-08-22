@@ -886,12 +886,12 @@
                                         "default": ""
                                     },
                                     "scheduleTerm": {
-                                        "type": "integer",
-                                        "default": ""
+                                        "type": "string",
+                                        "default": "123"
                                     },
                                     "scheduleKanji": {
-                                        "type": "integer",
-                                        "default": ""
+                                        "type": "string",
+                                        "default": "345"
                                     }
                                 }
                             },

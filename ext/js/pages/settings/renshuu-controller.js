@@ -45,12 +45,20 @@ class RenshuuController {
         this._renshuuScheduleKanjiList.addEventListener("change", this._onKanjiScheduleChanged.bind(this), false);
 
         const onRenshuuSettingChanged = () => { this._updateOptions(); };
-        const nodes = [renshuuAPIInput, ...document.querySelectorAll('[data-setting="renshuu.enable"]')];
+        const nodes = [renshuuAPIInput, ...document.querySelectorAll('[data-setting="renshuu.enable"]'), this._renshuuScheduleKanjiList, this._renshuuScheduleTermList];
         for (const node of nodes) {
             node.addEventListener('settingChanged', onRenshuuSettingChanged);
         }
 
         this._settingsController.on('optionsChanged', this._onOptionsChanged.bind(this));
+    }
+
+    async syncWithSettings({options}) {
+        this._renshuuAPIConnection.enabled = options.renshuu.enabled;
+        this._renshuuAPIConnection.apiKey = options.renshuu.apiKey;
+        this._renshuuTermID = options.renshuu.scheduleTerm;
+        this._renshuuKanjiID = options.renshuu.scheduleKanji;
+        console.log("got them" + options);
     }
 
     async _onRenshuuEnableChanged({detail: {value}}) {
@@ -77,6 +85,7 @@ class RenshuuController {
         if (!this._renshuuAPIConnection.enabled) { return; }
         const {value} = this._renshuuScheduleTermList;
         this._renshuuTermID = value;
+        await this._settingsController.setProfileSetting('renshuu.scheduleTerm', this._renshuuTermID);
         console.log(value);
 
     }
@@ -85,6 +94,7 @@ class RenshuuController {
         if (!this._renshuuAPIConnection.enabled) { return; }
         const {value} = this._renshuuScheduleKanjiList;
         this._renshuuKanjiID = value;
+        await this._settingsController.setProfileSetting('renshuu.scheduleKanji', this._renshuuKanjiID);
         console.log(value);
         
     }
@@ -144,7 +154,11 @@ class RenshuuController {
         this._onOptionsChanged({options});
     }
 
-    async _onOptionsChanged({options: {renshuu}}) {
+    async _onOptionsChanged({options}) {
+
+        this._renshuuScheduleTermList.value = options.renshuu.scheduleTerm;
+        this._renshuuScheduleKanjiList.value = options.renshuu.scheduleKanji;
+
         await this._settingsController.setProfileSetting('renshuu.enabled', this._renshuuAPIConnection.enabled);
         await this._settingsController.setProfileSetting('renshuu.apiKey', this._renshuuAPIConnection.apiKey);
         await this._settingsController.setProfileSetting('renshuu.scheduleTerm', this._renshuuTermID);

@@ -49,6 +49,9 @@
         const displayAnki = new DisplayAnki(display, displayAudio, japaneseUtil);
         displayAnki.prepare();
 
+        const displayRenshuu = new DisplayRenshuu(display);
+        displayRenshuu.prepare();
+
         const displayProfileSelection = new DisplayProfileSelection(display);
         displayProfileSelection.prepare();
 

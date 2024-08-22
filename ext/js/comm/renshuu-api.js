@@ -111,6 +111,12 @@ class RenshuuAPIConnection {
         return await this._apiCall(`word/${word}`, "DELETE");
     }
 
+    // remove a word from a schedule 
+    // where word is the word id
+    async addWord(word, schedule) {
+        return await this._apiCall(`word/${word}?sched_id=${schedule}`, "PUT");
+    }
+
     /**
      * Communicates with the API server
      * @param {string} action the action that you want to do, not preceeded by the renshuu website link
