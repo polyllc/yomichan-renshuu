@@ -48,13 +48,13 @@ class DisplayRenshuu {
             let wordResult = await res.text().then( async (txt) => {
                 let json = JSON.parse(txt);
                 if (json.result_count < 1) {
-                    text = `No results found (${JSON.parse(t).api_usage.calls_today}/${JSON.parse(t).api_usage.daily_allowance} API calls left today)`;
+                    text = `No results found (${JSON.parse(txt).api_usage.calls_today}/${JSON.parse(txt).api_usage.daily_allowance} API calls used today)`;
                 }
                 else {
                     try {
                         let res = await this._renshuuController._renshuuAPIConnection.addWord(json.words[0].id, this._renshuuController._renshuuTermID);
                         let apiCallsLeft = await res.text().then(async (t) => { 
-                            return `(${JSON.parse(t).api_usage.calls_today}/${JSON.parse(t).api_usage.daily_allowance} API calls left today)`;
+                            return `(${JSON.parse(t).api_usage.calls_today}/${JSON.parse(t).api_usage.daily_allowance} API calls used today)`;
                         });
                         text = "Added " + text + " " + apiCallsLeft;
                     }

@@ -62,7 +62,7 @@ class RenshuuController {
     }
 
     async _onRenshuuEnableChanged({detail: {value}}) {
-        if (this._renshuuAPIConnection.apiKey === null || this._renshuuAPIConnection.apiKey == "") { console.log("none: " + this._renshuuAPIConnection.apiKey); return; } // notify user to set api key
+        if (this._renshuuAPIConnection.apiKey === null || this._renshuuAPIConnection.apiKey == "") { return; } // notify user to set api key
         this._renshuuAPIConnection.enabled = value;
         if (value) {
             this._renshuuErrorMessage.textContent = await this._testAPIConnection.bind(this)();
@@ -96,16 +96,15 @@ class RenshuuController {
     }
 
     _clearScheduleList() {
-        let children = this._renshuuScheduleTermList.children;
-        for (let i = 0; i < children.length; i++) {
-            children[0].remove();
+        while (this._renshuuScheduleTermList.firstChild) {
+            this._renshuuScheduleTermList.removeChild(this._renshuuScheduleTermList.lastChild);
         }
 
-        children = this._renshuuScheduleKanjiList.children;
-        for (let i = 0; i < children.length; i++) {
-            children[0].remove();
+        while (this._renshuuScheduleKanjiList.firstChild) {
+            this._renshuuScheduleKanjiList.removeChild(this._renshuuScheduleKanjiList.lastChild);
         }
     }
+
 
     async _renshuuUpdateSchedules() {
         let schedules = await this._renshuuAPIConnection.getSchedules();
@@ -134,7 +133,7 @@ class RenshuuController {
                 let res = await this._renshuuAPIConnection.getProfile();
                 let text = await res.text().then((text) => {
                     let json = JSON.parse(text);
-                    return json.real_name + `(${json.api_usage.calls_today}/${json.api_usage.daily_allowance} API calls left today)`;
+                    return json.real_name + `(${json.api_usage.calls_today}/${json.api_usage.daily_allowance} API calls used today)`;
                 });
                 return "Logged in as " + text;
             }
