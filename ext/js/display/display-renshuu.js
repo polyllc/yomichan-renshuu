@@ -63,6 +63,9 @@ class DisplayRenshuu {
                         if(e.message.includes("409")) {
                             text = "Word already added";
                         }
+                        if(e.message.includes("404")) {
+                            text = "Schedule not selected";
+                        }
                     }
                 }
             });
@@ -74,9 +77,6 @@ class DisplayRenshuu {
                 }
                 if(e.message.includes("409")) {
                     text = "Word not found";
-                }
-                if(e.message.includes("404")) {
-                    text = "Schedule not selected";
                 }
             }
             
