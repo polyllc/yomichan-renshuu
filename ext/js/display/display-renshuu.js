@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2019-2022  Yomichan Authors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+
 class DisplayRenshuu {
     constructor(display) {
         this._display = display;
@@ -16,29 +34,29 @@ class DisplayRenshuu {
         const button = e.currentTarget;
         const dictionaryEntryIndex = this._display.getElementDictionaryEntryIndex(button);
         if(this._notification === null) {
-    //  console.log(this._display);
             this._notification = this._display.createNotification(true);
         }
 
         let text = "";
-        console.log(this._settingsOptions);
         if(!this._renshuuController._renshuuAPIConnection.enabled) {
             text = "Renshuu not enabled";
         }
         else {
-            console.log(this._renshuuController);
             text = this._getHeadword(dictionaryEntryIndex, 0);
             try {
             let res = await this._renshuuController._renshuuAPIConnection.searchWord(text);
             let wordResult = await res.text().then( async (txt) => {
                 let json = JSON.parse(txt);
                 if (json.result_count < 1) {
-                    text = "No results found";
+                    text = `No results found (${JSON.parse(t).api_usage.calls_today}/${JSON.parse(t).api_usage.daily_allowance} API calls left today)`;
                 }
                 else {
                     try {
-                        await this._renshuuController._renshuuAPIConnection.addWord(json.words[0].id, this._renshuuController._renshuuTermID);
-                        text = "Added " + text;
+                        let res = await this._renshuuController._renshuuAPIConnection.addWord(json.words[0].id, this._renshuuController._renshuuTermID);
+                        let apiCallsLeft = await res.text().then(async (t) => { 
+                            return `(${JSON.parse(t).api_usage.calls_today}/${JSON.parse(t).api_usage.daily_allowance} API calls left today)`;
+                        });
+                        text = "Added " + text + " " + apiCallsLeft;
                     }
                     catch(e) {
                         text = e.message;
@@ -50,7 +68,6 @@ class DisplayRenshuu {
             });
             }
             catch (e) {
-             //   console.log(e);
                 text = e.message;
                 if(e.message.includes("401")) {
                     text = "API Connection error. (Maybe check your API key?)";
@@ -63,6 +80,7 @@ class DisplayRenshuu {
                 }
             }
             
+            
         }
 
         this._notification.setContent(text);
@@ -70,7 +88,6 @@ class DisplayRenshuu {
     }
 
     syncWithSettings({options}) {
-    //    console.log(options);
         this._settingsOptions = {options};
         this._renshuuController._renshuuAPIConnection._enabled = options.renshuu.enabled;
         this._renshuuController._renshuuAPIConnection._apiKey = options.renshuu.apiKey;
@@ -80,7 +97,6 @@ class DisplayRenshuu {
 
     _onContentUpdateEntry({element}) {
         const eventListeners = this._eventListeners;
-      //  console.log(this._display);
         for (const button of element.querySelectorAll('.action-button[data-action=add-term]')) {
             eventListeners.addEventListener(button, 'click', this.onClick.bind(this), false);
         }

@@ -26,17 +26,22 @@ Yomichan provides advanced features not available in other browser-based diction
 
 ## Table of Contents
 
-*   [Installation](#installation)
-*   [Dictionaries](#dictionaries)
-*   [Basic Usage](#basic-usage)
-*   [Custom Dictionaries](#custom-dictionaries)
-*   [Anki Integration](#anki-integration)
-    *   [Flashcard Configuration](#flashcard-configuration)
-    *   [Flashcard Creation](#flashcard-creation)
-*   [Keyboard Shortcuts](#keyboard-shortcuts)
-*   [Frequently Asked Questions](#frequently-asked-questions)
-*   [Licenses](#licenses)
-*   [Third-Party Libraries](#third-party-libraries)
+- [Yomichan](#yomichan)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+    - [Firefox](#firefox)
+    - [Chrome(ium)](#chromeium)
+  - [Renshuu Integration (!)](#renshuu-integration-)
+  - [Dictionaries](#dictionaries)
+  - [Basic Usage](#basic-usage)
+  - [Custom Dictionaries](#custom-dictionaries)
+  - [Anki Integration](#anki-integration)
+    - [Flashcard Configuration](#flashcard-configuration)
+    - [Flashcard Creation](#flashcard-creation)
+  - [Keyboard Shortcuts](#keyboard-shortcuts)
+  - [Frequently Asked Questions](#frequently-asked-questions)
+  - [Licenses](#licenses)
+  - [Third-Party Libraries](#third-party-libraries)
 
 ## Installation
 
@@ -56,6 +61,16 @@ submitting issues on GitHub, try the *testing* version; otherwise, the *stable* 
     <sup>*</sup>Unlike Chrome, Firefox does not allow extensions meant for testing to be hosted in the marketplace.
     You will have to download a desired version and side-load it yourself. You only need to do this once and will get
     updates automatically.
+Do not install these if you want the renshuu integration! Instead follow installation instructions here:
+
+Download from releases section your favorite browsers file and
+### Firefox
+Firefox is a bit more complicated than Chrome. Go to about:addons, click on the gear, click "Debug Add-ons", click on "Load Temporary Add-on" and select the .xpi file. It will delete itself upon browser closure, so look up how to install addons without a signature on firefox in your favorite search engine. 
+### Chrome(ium)
+Chrome (and chromium) is a bit more simple. Extract the zip file, and then go to chrome://extensions/ and then toggle developer mode in the top right. Then click on "Load unpacked" and select the extracted folder, and you're good. 
+
+## Renshuu Integration (!)
+Added support for the popular Japanese learning app renshuu! Simply add your API key and set your schedule (currently kanji schedule does not do anything, but you are more than willing to set it for fun), and click on the r (renshuu logo) when searching a word in yomichan. It will add it to that schedule (and will not remove it when clicked again). There is an API limit for renshuu, but that is reached after about 250 word adds a day (which could be possible).
 
 ## Dictionaries
 

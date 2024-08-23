@@ -50,6 +50,7 @@ class RenshuuController {
             node.addEventListener('settingChanged', onRenshuuSettingChanged);
         }
 
+        onRenshuuSettingChanged();
         this._settingsController.on('optionsChanged', this._onOptionsChanged.bind(this));
     }
 
@@ -58,13 +59,11 @@ class RenshuuController {
         this._renshuuAPIConnection.apiKey = options.renshuu.apiKey;
         this._renshuuTermID = options.renshuu.scheduleTerm;
         this._renshuuKanjiID = options.renshuu.scheduleKanji;
-        console.log("got them" + options);
     }
 
     async _onRenshuuEnableChanged({detail: {value}}) {
         if (this._renshuuAPIConnection.apiKey === null || this._renshuuAPIConnection.apiKey == "") { console.log("none: " + this._renshuuAPIConnection.apiKey); return; } // notify user to set api key
         this._renshuuAPIConnection.enabled = value;
-        console.log("toggle enable: " + value);
         if (value) {
             this._renshuuErrorMessage.textContent = await this._testAPIConnection.bind(this)();
             try {
@@ -78,7 +77,6 @@ class RenshuuController {
             this._renshuuErrorMessage.textContent = "Not enabled";
             this._clearScheduleList();
         }
-        console.log("toggle enable: " + value);
     }
 
     async _onTermScheduleChanged() {
@@ -86,7 +84,6 @@ class RenshuuController {
         const {value} = this._renshuuScheduleTermList;
         this._renshuuTermID = value;
         await this._settingsController.setProfileSetting('renshuu.scheduleTerm', this._renshuuTermID);
-        console.log(value);
 
     }
 
@@ -95,7 +92,6 @@ class RenshuuController {
         const {value} = this._renshuuScheduleKanjiList;
         this._renshuuKanjiID = value;
         await this._settingsController.setProfileSetting('renshuu.scheduleKanji', this._renshuuKanjiID);
-        console.log(value);
         
     }
 
@@ -125,11 +121,11 @@ class RenshuuController {
             node.textContent = schedule.name;
             this._renshuuScheduleKanjiList.appendChild(node);
         }
+        this._updateOptions(); 
     }
 
     _onRenshuuAPIKeyChanged({detail: {value}}) {
         this._renshuuAPIConnection.apiKey = value;
-        console.log("added api key: " + value);
     }
 
     async _testAPIConnection() {
@@ -138,7 +134,7 @@ class RenshuuController {
                 let res = await this._renshuuAPIConnection.getProfile();
                 let text = await res.text().then((text) => {
                     let json = JSON.parse(text);
-                    return json.real_name;
+                    return json.real_name + `(${json.api_usage.calls_today}/${json.api_usage.daily_allowance} API calls left today)`;
                 });
                 return "Logged in as " + text;
             }
