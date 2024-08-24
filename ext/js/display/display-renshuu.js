@@ -30,7 +30,7 @@ class DisplayRenshuu {
     }
 
 
-    async onClick(e) {
+    async onClick(e, termOrKanji) {
         const button = e.currentTarget;
         const dictionaryEntryIndex = this._display.getElementDictionaryEntryIndex(button);
         if(this._notification === null) {
@@ -42,9 +42,11 @@ class DisplayRenshuu {
             text = "Renshuu not enabled";
         }
         else {
-            text = this._getHeadword(dictionaryEntryIndex, 0);
+            text = (termOrKanji ? this._getHeadword(dictionaryEntryIndex, 0) : this._display._dictionaryEntries[0].character);
+            
             try {
-            let res = await this._renshuuController._renshuuAPIConnection.searchWord(text);
+            let res = (termOrKanji ? await this._renshuuController._renshuuAPIConnection.searchWord(text) :
+                                     await this._renshuuController._renshuuAPIConnection.getKanji(text));
             let wordResult = await res.text().then( async (txt) => {
                 let json = JSON.parse(txt);
                 if (json.result_count < 1) {
@@ -52,7 +54,8 @@ class DisplayRenshuu {
                 }
                 else {
                     try {
-                        let res = await this._renshuuController._renshuuAPIConnection.addWord(json.words[0].id, this._renshuuController._renshuuTermID);
+                        let res = (termOrKanji ? await this._renshuuController._renshuuAPIConnection.addWord(json.words[0].id, this._renshuuController._renshuuTermID)
+                        : await this._renshuuController._renshuuAPIConnection.addKanji(text, this._renshuuController._renshuuKanjiID));
                         let apiCallsLeft = await res.text().then(async (t) => { 
                             return `(${JSON.parse(t).api_usage.calls_today}/${JSON.parse(t).api_usage.daily_allowance} API calls used today)`;
                         });
@@ -85,6 +88,18 @@ class DisplayRenshuu {
 
         this._notification.setContent(text);
         this._notification.open();
+        setTimeout(() => {
+            if (this._notification === null) { return; }
+            this._notification.close(true);
+        }, 3000);
+    }
+
+    async onClickTerm(e) {
+       await this.onClick(e, true);
+    }
+    
+    async onClickKanji(e) {
+        await this.onClick(e, false);
     }
 
     syncWithSettings({options}) {
@@ -98,7 +113,10 @@ class DisplayRenshuu {
     _onContentUpdateEntry({element}) {
         const eventListeners = this._eventListeners;
         for (const button of element.querySelectorAll('.action-button[data-action=add-term]')) {
-            eventListeners.addEventListener(button, 'click', this.onClick.bind(this), false);
+            eventListeners.addEventListener(button, 'click', this.onClickTerm.bind(this), false);
+        }
+        for (const button of element.querySelectorAll('.action-button[data-action=add-kanji]')) {
+            eventListeners.addEventListener(button, 'click', this.onClickKanji.bind(this), false);
         }
     }
 
